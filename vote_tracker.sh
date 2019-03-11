@@ -42,7 +42,7 @@ gobject_list=$(dash-cli gobject list)
 
 
 echo "$gobject_list"|jq '.[].Hash'|while read;do
-	#echo "$REPLY"
+	#echo "$REPLY" 1>&2
 	AbsoluteYesCount=$(echo "$gobject_list"|jq ".[] | select(.Hash==$REPLY)|.AbsoluteYesCount")
 	AbstainCount=$(echo "$gobject_list"|jq ".[] | select(.Hash==$REPLY)|.AbstainCount")
 	CollateralHash=$(echo "$gobject_list"|jq ".[] | select(.Hash==$REPLY)|.CollateralHash"|sed 's/"//g')
@@ -63,7 +63,7 @@ echo "$gobject_list"|jq '.[].Hash'|while read;do
 	sed 's/\\"/"/g;s/^.*end_epoch/end_epoch/g;s/":/\t/g;s/,"/\t/g;s/"//g;s/}[]]*$//'|
 #	sed 's/\\"/"/g;s/^"\[\["proposal",{//g;s/....$//g;s/":/\t/g;s/,"/\t/g;s/"//g'|
 	sed 's/^end_epoch//g;s/	name//g;s/	payment_address//g;s/	payment_amount//g;s/	start_epoch//g;s/	type//g;s/	url//g;'
-done>>proposals.txt
+done|sed '/0000000000000000000000000000000000000000000000000000000000000000/d'>>proposals.txt
 
 
 
